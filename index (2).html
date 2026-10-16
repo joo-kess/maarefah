@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معرفة-Maarefah</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a12;--card:#13152a;--border:#23264a;--main:#6366f1;--text:#e5e7eb}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+body{background:var(--bg);color:var(--text)}
+.nav{padding:14px 8%;background:rgba(16,18,33,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.logo{font-weight:900;font-size:18px}.logo span{color:var(--main)}
+.hero{text-align:center;padding:50px 8% 20px}
+.hero h1{font-size:42px;font-weight:900;line-height:1.2}.hero h1 span{color:var(--main)}
+.hero p{color:#6b7280;margin-top:10px}
+.search{max-width:750px;margin:30px auto;background:var(--card);border:1px solid var(--border);border-radius:50px;padding:8px;display:flex;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+.search input{flex:1;background:transparent;border:none;outline:none;color:#fff;padding:0 20px;font-size:16px}
+.search button{background:var(--main);border:none;color:#fff;padding:12px 28px;border-radius:50px;font-weight:800;cursor:pointer;transition:0.2s}
+.search button:hover{background:#4f46e5}
+.suggest{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.suggest span{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;color:#9ca3af}
+.suggest span:hover{color:#fff;border-color:var(--main)}
+.container{max-width:1150px;margin:auto;padding:20px 8%}
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px}
+.card.ai{border-color:var(--main);background:linear-gradient(135deg,#13152a,#1a1740)}
+.card h2{font-size:16px;color:#a5b4fc;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.badge{font-size:10px;background:#1e1f3a;color:#818cf8;padding:3px 10px;border-radius:20px}
+.card p{font-size:14.5px;line-height:2;color:#d1d5db;white-space:pre-wrap}
+.card img{width:100%;border-radius:14px;margin-bottom:16px;max-height:320px;object-fit:cover;border:1px solid var(--border)}
+.facts{background:#0f1020;border:1px dashed #2a2c45;border-radius:14px;padding:16px;margin-top:16px}
+.facts b{color:#a5b4fc;font-size:13px}
+.summary-box{margin-top:20px;background:linear-gradient(135deg,#0f1020,#161a35);border:1px solid var(--main);border-radius:14px;padding:18px}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions button{background:#1e1f3a;border:1px solid var(--border);color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer}
+.actions button:hover{border-color:var(--main)}
+.sources-list a{color:#60a5fa;font-size:12px;display:block;margin:5px 0;text-decoration:none;word-break:break-all}
+.sources-list a:hover{text-decoration:underline}
+.loader{display:none;text-align:center;padding:30px} .loader.on{display:block}
+.dev{max-width:1150px;margin:40px auto;background:linear-gradient(135deg,#13152a,#1a1740);border:1px solid var(--border);border-radius:20px;padding:20px 25px;display:flex;align-items:center;gap:16px}
+.dev-img{width:56px;height:56px;background:linear-gradient(135deg,#6366f1,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px}
+</style>
+</head>
+<body>
+
+<div class="nav">
+<div class="logo">YOUSSEF <span>ENCYCLOPEDIA ULTIMATE</span></div>
+<div style="font-size:11px;color:#666">V7 • الباشمهندس يوسف محمود</div>
+</div>
+
+<div class="hero">
+<h1>موسوعة <span>متكاملة</span> من مصادر موثوقة</h1>
+<p>اكتب أي موضوع وهجيبلك مقال كامل بصورة وملخص ومصادر</p>
+<div class="search">
+<input id="q" placeholder="مثال: الذكاء الاصطناعي، تاريخ مصر، بايثون..." onkeydown="if(event.key==='Enter')start()">
+<button onclick="start()">بحث شامل 🚀</button>
+</div>
+<div class="suggest">
+<span onclick="quick('الذكاء الاصطناعي')">الذكاء الاصطناعي</span>
+<span onclick="quick('مصر')">مصر</span>
+<span onclick="quick('بايثون')">بايثون</span>
+<span onclick="quick('البرمجة')">البرمجة</span>
+<span onclick="quick('ناسا')">ناسا</span>
+</div>
+</div>
+
+<div class="loader" id="loader">🔍 بجمعلك موسوعة كاملة... ثواني</div>
+
+<div class="container" id="result" style="display:none">
+<div class="main-grid">
+<div>
+<div class="card ai">
+<h2>📘 المقال الشامل <span class="badge" id="aiBadge">AI</span></h2>
+<img id="mainImg" style="display:none">
+<p id="aiText"></p>
+<div class="summary-box"><b>📌 الملخص النهائي:</b><p id="summaryText" style="margin-top:8px;color:#fff"></p></div>
+<div class="actions">
+<button onclick="copyText()">📋 نسخ المقال</button>
+<button onclick="window.print()">📄 حفظ PDF</button>
+<button onclick="share()">🔗 مشاركة</button>
+</div>
+</div>
+</div>
+
+<div>
+<div class="card"><h2>⚡ حقائق سريعة <span class="badge">Wikidata</span></h2><p id="factsText" style="font-size:13px"></p></div>
+<div class="card"><h2>📖 ويكيبيديا عربي <span class="badge">موثوق</span></h2><p id="arText" style="font-size:13px"></p><a id="arLink" class="sources-list" target="_blank"></a></div>
+<div class="card"><h2>🌍 English Source <span class="badge">Verified</span></h2><p id="enText" style="font-size:13px"></p><a id="enLink" class="sources-list" target="_blank"></a></div>
+</div>
+</div>
+
+<div class="card">
+<h2>📑 قائمة المصادر والمراجع الموثوقة</h2>
+<div id="sourcesList" class="sources-list"></div>
+<p style="font-size:10px;color:#555;margin-top:12px">تاريخ التجميع: <span id="date"></span> | تم التطوير بواسطة الباشمهندس يوسف محمود</p>
+</div>
+</div>
+
+<div class="dev">
+<div class="dev-img">ي</div>
+<div>
+<div style="font-weight:800">الباشمهندس يوسف محمود</div>
+<div style="font-size:12px;color:#888">مطور موسوعة المعلومات الشاملة - نسخة متكاملة بمصادر موثوقة وملخص ذكي</div>
+</div>
+</div>
+
+<script>
+document.getElementById('date').innerText = new Date().toLocaleDateString('ar-EG');
+function quick(t){ document.getElementById('q').value=t; start(); }
+function copyText(){ navigator.clipboard.writeText(document.getElementById('aiText').innerText); alert('تم النسخ ✓'); }
+function share(){ if(navigator.share) navigator.share({title:document.getElementById('q').value, text:document.getElementById('aiText').innerText}); }
+
+async function getWiki(lang, query){
+ try{
+  let sUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=1`;
+  let s = await fetch(sUrl);
+  let sj = await s.json();
+  let title = sj.query.search[0]?.title || query;
+  let sumUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+  let r = await fetch(sumUrl);
+  let d = await r.json();
+  return d;
+ }catch{return null}
+}
+
+async function start(){
+ let q = document.getElementById('q').value.trim();
+ if(!q) return;
+ document.getElementById('loader').classList.add('on');
+ document.getElementById('result').style.display='none';
+ document.getElementById('sourcesList').innerHTML='';
+ 
+ // AI - مقال متكامل ومقسم
+ let aiPromise = fetch(`https://text.pollinations.ai/${encodeURIComponent(`اكتب مقال موسوعي شامل وموثوق عن "${q}" بالعربي، مقسم بهذا الشكل بالظبط:
+- تعريف شامل (فقرتين)
+- التاريخ والنشأة
+- الأنواع أو الأقسام
+- الأهمية والاستخدامات
+- حقائق مهمة
+في الاخر اكتب ---ملخص--- وبعده ملخص 4 سطور قوي.
+خليك علمي ومفصل`)}`).then(r=>r.text()).then(t=>{
+   let parts = t.split('---ملخص---');
+   document.getElementById('aiText').innerText = parts[0] || t;
+   document.getElementById('summaryText').innerText = parts[1] || t.slice(-300);
+   document.getElementById('aiBadge').innerText='تم ✓';
+ }).catch(()=>{document.getElementById('aiText').innerText='حاول تاني';});
+
+ // Wiki AR + صورة
+ let arPromise = getWiki('ar', q).then(d=>{
+  if(d?.extract){
+   document.getElementById('arText').innerText = d.extract.slice(0,500);
+   document.getElementById('arLink').innerHTML = `<a href="${d.content_urls.desktop.page}" target="_blank">${d.content_urls.desktop.page}</a>`;
+   document.getElementById('factsText').innerText = d.description ? `التصنيف: ${d.description}` : '';
+   if(d.thumbnail){ let img=document.getElementById('mainImg'); img.src=d.thumbnail.source.replace('320','640'); img.style.display='block'; }
+   document.getElementById('sourcesList').innerHTML += `• [1] ويكيبيديا العربية: ${d.content_urls.desktop.page}<br>`;
+  } else document.getElementById('arText').innerText='لا يوجد مقال مطابق';
+ });
+
+ // Wiki EN
+ let enPromise = getWiki('en', q).then(d=>{
+  if(d?.extract){
+   document.getElementById('enText').innerText = d.extract.slice(0,500);
+   document.getElementById('enLink').innerHTML = `<a href="${d.content_urls.desktop.page}" target="_blank">${d.content_urls.desktop.page}</a>`;
+   document.getElementById('sourcesList').innerHTML += `• [2] Wikipedia EN: ${d.content_urls.desktop.page}<br>`;
+   if(!document.getElementById('mainImg').src && d.thumbnail){ let img=document.getElementById('mainImg'); img.src=d.thumbnail.source.replace('320','640'); img.style.display='block'; }
+  } else document.getElementById('enText').innerText='No article found';
+ });
+
+ await Promise.allSettled([aiPromise, arPromise, enPromise]);
+ document.getElementById('sourcesList').innerHTML += `• [3] AI Source: Pollinations Llama 3.3 (Free)<br>• [4] Scholar: https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`;
+ document.getElementById('loader').classList.remove('on');
+ document.getElementById('result').style.display='block';
+ window.scrollTo({top:300,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
